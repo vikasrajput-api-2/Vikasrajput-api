@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import os
 import time
@@ -48,6 +48,11 @@ def download_audio():
     except subprocess.CalledProcessError as e:
         return jsonify({"error": str(e)}), 500
 
+# Route to serve static files
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(DOWNLOAD_FOLDER, filename)
+
 # YouTube Channel API (Hardcoded)
 @app.route('/channel', methods=['GET'])
 def get_channel():
@@ -60,3 +65,4 @@ def add_header(response):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+                   
