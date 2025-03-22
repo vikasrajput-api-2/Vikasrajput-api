@@ -14,7 +14,7 @@ COOKIES_FILE = "cookies.txt"
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
-# Function to delete old files (older than 10 sec)
+# Function to delete old files (older than 10 seconds)
 def delete_old_files():
     for file in os.listdir(DOWNLOAD_FOLDER):
         file_path = os.path.join(DOWNLOAD_FOLDER, file)
@@ -44,11 +44,14 @@ def download_audio():
 
     try:
         subprocess.run(command, check=True)
-        return jsonify({"file_url": f"http://mirrykal.onrender.com/static/{unique_filename}", "message": "Download successful"})
+        return jsonify({
+            "file_url": f"https://vikasrajput-api.onrender.com/static/{unique_filename}",
+            "message": "Download successful"
+        })
     except subprocess.CalledProcessError as e:
         return jsonify({"error": str(e)}), 500
 
-# Route to serve static files
+# Route to serve static mp3 files
 @app.route('/static/<path:filename>')
 def serve_static(filename):
     return send_from_directory(DOWNLOAD_FOLDER, filename)
@@ -58,6 +61,7 @@ def serve_static(filename):
 def get_channel():
     return jsonify({"channel_link": "https://m.youtube.com/mirrykal"})
 
+# Disable caching
 @app.after_request
 def add_header(response):
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
@@ -65,4 +69,4 @@ def add_header(response):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-                   
+        
