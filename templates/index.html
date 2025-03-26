@@ -5,23 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vikas Rajput API</title>
     <style>
+        /* 🔥 Background Animation */
+        @keyframes changeBackground {
+            0% { background-image: url('https://i.postimg.cc/vBV1rc7S/b98fb96f-7719-4110-b514-258363808447.jpg'); }
+            25% { background-image: url('https://i.postimg.cc/qMj7CsVv/2774e8c9-e7bb-4023-b9bd-eab75a0df0ea.jpg'); }
+            50% { background-image: url('https://i.postimg.cc/gkkzdxXF/image.jpg'); }
+            75% { background-image: url('https://i.postimg.cc/xT422tVM/6c9c9cc6-ab11-4136-a13f-f594becc40e6.jpg'); }
+            100% { background-image: url('https://i.postimg.cc/nrhy8Qd3/FB-IMG-1740339278292.jpg'); }
+        }
+
         body {
             text-align: center;
             font-family: Arial, sans-serif;
+            color: white;
             padding: 50px;
+            background-size: cover;
+            background-position: center;
+            animation: changeBackground 10s infinite alternate;
         }
-        img {
-            width: 100%; /* Full width */
-            max-width: 600px; /* Adjust max size */
-            height: auto; /* Maintain aspect ratio */
-            border-radius: 0; /* Remove circle */
+
+        h1 {
+            font-size: 36px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        p {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* 🔥 Video Embed */
+        .video-container {
             margin-top: 20px;
+        }
+
+        iframe {
+            width: 80%;
+            max-width: 600px;
+            height: 315px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* 🔥 Add Friend Button */
+        .add-friend {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: #ff4d4d;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            transition: 0.3s;
+        }
+
+        .add-friend:hover {
+            background: #ff1a1a;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
         }
     </style>
 </head>
 <body>
-    <h1>🤍 𝐕𝐈𝐊𝐀𝐒 𝐑𝐀J𝐏𝐔𝐓 🤍</h1>
-    <p>𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐭𝐨 𝐦𝐲➠𝐀𝐏𝐈</p>
-    <img src="https://i.postimg.cc/kgKXYQ39/Picsart-25-03-14-01-05-31-853.jpg" alt="𝗩𝗜𝗞𝗔𝗦 𝗥𝗔𝗝𝗣𝗨𝗧➤𝗠𝗨𝗦𝗜𝗖 𝗔𝗣𝗜 𝗪𝗢𝗥𝗞𝗜𝗡𝗚..">
+    <h1>Vikas Rajput</h1>
+    <p>Welcome to my API</p>
+
+    <!-- 📹 Video Embed Section -->
+    <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/N2_A5ALjF9Q" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <!-- 🔗 Add Friend Button -->
+    <a href="https://www.facebook.com/share/1Ejp2ECVGC/" class="add-friend" target="_blank">➕ Add Friend</a>
 </body>
 </html>
