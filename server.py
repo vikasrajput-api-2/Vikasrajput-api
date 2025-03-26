@@ -14,6 +14,11 @@ COOKIES_FILE = "cookies.txt"
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
+# ✅ UptimeRobot ke liye `/` route add kiya
+@app.route('/')
+def home():
+    return "OK", 200  # Ye response dega taaki 404 error na aaye
+
 def delete_old_files():
     for file in os.listdir(DOWNLOAD_FOLDER):
         file_path = os.path.join(DOWNLOAD_FOLDER, file)
@@ -72,4 +77,4 @@ def add_header(response):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-    
+                             
