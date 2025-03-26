@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 import os
 import time
@@ -14,10 +14,10 @@ COOKIES_FILE = "cookies.txt"
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
-# ✅ UptimeRobot ke liye `/` route add kiya
+# ✅ Home Page Route (Yahan HTML render hoga)
 @app.route('/')
 def home():
-    return "OK", 200  # Ye response dega taaki 404 error na aaye
+    return render_template("index.html")  # Ye `templates/index.html` file serve karega
 
 def delete_old_files():
     for file in os.listdir(DOWNLOAD_FOLDER):
@@ -77,4 +77,4 @@ def add_header(response):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-                             
+    
