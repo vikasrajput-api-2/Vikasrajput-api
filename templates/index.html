@@ -5,24 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vikas Rajput API</title>
     <style>
-        /* 🌟 Full HD 3D Background Animation */
-        @keyframes changeBackground {
-            0% { background-image: url('https://i.postimg.cc/gkkzdxXF/image.jpg'); }
-            25% { background-image: url('https://i.postimg.cc/597LD4VP/eaa53cfe-cae6-4557-bd87-10f5867c4f9f.jpg'); }
-            50% { background-image: url('https://i.postimg.cc/W1rZD0JK/Solo-leveling-wallpaper.jpg'); }
-            75% { background-image: url('https://i.postimg.cc/Px6vG4BL/Video-Wallpaper-Live-Video-Dark-Wallpaper.jpg'); }
-            100% { background-image: url('https://i.postimg.cc/0NXGh4Cj/One-piece-luffy-wallpaper-hd-4k.jpg'); }
-        }
-
+        /* 🔥 Background Styling */
         body {
             text-align: center;
             font-family: Arial, sans-serif;
             color: white;
             padding: 50px;
+            background-image: url('https://i.postimg.cc/W1rZD0JK/Solo-leveling-wallpaper.jpg');
             background-size: cover;
             background-position: center;
-            animation: changeBackground 20s infinite alternate;
-            transition: background 1s ease-in-out;
+            background-attachment: fixed;
         }
 
         h1 {
@@ -35,22 +27,23 @@
             font-weight: bold;
         }
 
-        /* 📹 Video Embed */
+        /* 🎬 Video Container */
         .video-container {
             margin-top: 20px;
+            display: flex;
+            justify-content: center;
         }
 
         iframe {
-            width: 80%;
-            max-width: 600px;
-            height: 315px;
+            width: 350px; /* Wide Cinematic Look */
+            height: 200px; /* Maintain 16:9 Ratio */
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
             background: transparent;
             border: none;
         }
 
-        /* 🔵 Add Friend Button */
+        /* ➕ Add Friend Button */
         .add-friend {
             display: inline-block;
             margin-top: 20px;
@@ -99,7 +92,7 @@
     <h1>Vikas Rajput</h1>
     <p>Welcome to my API</p>
 
-    <!-- 📹 Video Embed Section -->
+    <!-- 🎬 Video Embed Section -->
     <div class="video-container">
         <iframe 
             src="https://www.youtube.com/embed/E0u9JlQBeYc" 
@@ -109,7 +102,7 @@
         </iframe>
     </div>
 
-    <!-- 🔵 Add Friend Button -->
+    <!-- ➕ Add Friend Button -->
     <a href="https://www.facebook.com/share/1Ejp2ECVGC/" class="add-friend" target="_blank">+ Add Friend</a>
 
     <!-- 🔴 YouTube Subscribe Button -->
