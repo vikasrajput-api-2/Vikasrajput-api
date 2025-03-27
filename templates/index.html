@@ -5,13 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vikas Rajput API</title>
     <style>
-        /* 🔥 Background Styling */
+        /* 🔥 Background Animation (Change every 15 sec) */
+        @keyframes changeBG {
+            0% { background-image: url('https://i.postimg.cc/W1rZD0JK/Solo-leveling-wallpaper.jpg'); }
+            20% { background-image: url('https://i.postimg.cc/vmHdZT7C/Anime-background-1.jpg'); }
+            40% { background-image: url('https://i.postimg.cc/c4pKyz2q/Anime-background-2.jpg'); }
+            60% { background-image: url('https://i.postimg.cc/ZnXc90Cn/Anime-background-3.jpg'); }
+            80% { background-image: url('https://i.postimg.cc/W1rZD0JK/Solo-leveling-wallpaper.jpg'); }
+        }
+
         body {
             text-align: center;
             font-family: Arial, sans-serif;
             color: white;
             padding: 50px;
-            background-image: url('https://i.postimg.cc/W1rZD0JK/Solo-leveling-wallpaper.jpg');
+            animation: changeBG 15s infinite;
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -32,6 +40,8 @@
             margin-top: 20px;
             display: flex;
             justify-content: center;
+            position: relative;
+            z-index: 2; /* Background ke niche na chhupay */
         }
 
         iframe {
@@ -43,21 +53,33 @@
             border: none;
         }
 
+        /* 📝 Subscribe Text (Video ke upar) */
+        .subscribe-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: yellow;
+            text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+            margin-bottom: -10px;
+        }
+
         /* ➕ Add Friend Button */
-        .add-friend {
+        .add-friend, .subscribe {
             display: inline-block;
             margin-top: 20px;
             padding: 10px 20px;
             font-size: 18px;
             font-weight: bold;
             color: white;
-            background: #1877F2;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
             transition: 0.3s;
+        }
+
+        .add-friend {
+            background: #1877F2;
+            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
         }
 
         .add-friend:hover {
@@ -67,30 +89,29 @@
 
         /* 🔴 YouTube Subscribe Button */
         .subscribe {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
             background: #FF0000;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
             box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-            transition: 0.3s;
         }
 
         .subscribe:hover {
             background: #cc0000;
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
         }
+
+        /* 📌 Buttons sabse niche */
+        .buttons-container {
+            margin-top: 50px;
+            z-index: 3;
+        }
+
     </style>
 </head>
 <body>
     <h1>Vikas Rajput</h1>
     <p>Welcome to my API</p>
+
+    <!-- 📝 Subscribe Text (Video ke upar) -->
+    <p class="subscribe-text">Subscribe my channel RAJPUT-TRICKER</p>
 
     <!-- 🎬 Video Embed Section -->
     <div class="video-container">
@@ -102,10 +123,10 @@
         </iframe>
     </div>
 
-    <!-- ➕ Add Friend Button -->
-    <a href="https://www.facebook.com/share/1Ejp2ECVGC/" class="add-friend" target="_blank">+ Add Friend</a>
-
-    <!-- 🔴 YouTube Subscribe Button -->
-    <a href="https://www.youtube.com/@uniquecreatorRajput?sub_confirmation=1" class="subscribe" target="_blank">📺 Subscribe</a>
+    <!-- 📌 Buttons sabse niche -->
+    <div class="buttons-container">
+        <a href="https://www.facebook.com/share/1Ejp2ECVGC/" class="add-friend" target="_blank">+ Add Friend</a>
+        <a href="https://www.youtube.com/@uniquecreatorRajput?sub_confirmation=1" class="subscribe" target="_blank">📺 Subscribe</a>
+    </div>
 </body>
 </html>
