@@ -45,15 +45,19 @@
             margin-bottom: 15px;
         }
 
-        /* Video Section (Original Size) */
+        /* Video Section (Fixed Size & Responsive) */
         .video-container {
             margin-top: 10px;
             margin-bottom: 20px;
+            width: 100%;
+            max-width: 360px; /* Fixed width */
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        iframe {
-            width: 350px;
-            height: 200px;
+        .video-container iframe {
+            width: 100%;
+            height: 200px; /* Proper height */
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
             background: transparent;
@@ -118,5 +122,9 @@
     </div>
 
     <!-- Buttons -->
-    <div
-        
+    <div class="button-container">
+        <a href="#" class="btn add-friend">+ Add Friend</a>
+        <a href="#" class="btn subscribe">📺 Subscribe</a>
+    </div>
+</body>
+</html>
