@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vikas Rajput - API</title>
+    <title>Vikas Rajput API</title>
     <style>
-        /* Background Slideshow (5 Images) */
+        /* Background Animation */
         @keyframes changeBackground {
             0% { background-image: url('https://i.postimg.cc/gkkzdxXF/image.jpg'); }
             25% { background-image: url('https://i.postimg.cc/597LD4VP/eaa53cfe-cae6-4557-bd87-10f5867c4f9f.jpg'); }
@@ -18,31 +18,38 @@
             text-align: center;
             font-family: Arial, sans-serif;
             color: white;
-            padding: 50px;
+            padding: 20px;
             background-size: cover;
             background-position: center;
-            animation: changeBackground 20s infinite alternate;
+            animation: changeBackground 15s infinite alternate;
             transition: background 1s ease-in-out;
         }
 
         h1 {
             font-size: 36px;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+            margin-top: 0;
         }
 
         p {
             font-size: 20px;
             font-weight: bold;
+            margin-bottom: 20px;
         }
 
         /* Video Embed */
         .video-container {
-            margin-top: 20px;
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         iframe {
-            width: 80%;
-            max-width: 600px;
+            width: 95%;
+            max-width: 95%;
             height: 315px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
@@ -50,21 +57,46 @@
             border: none;
         }
 
-        /* Add Friend Button */
-        .add-friend {
+        /* Subscribe Box */
+        .subscribe-box {
+            background: green;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px;
+            margin: 15px auto;
             display: inline-block;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Buttons */
+        .buttons {
             margin-top: 20px;
-            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .add-friend, .subscribe {
+            width: 90%;
+            max-width: 300px;
+            padding: 12px;
             font-size: 18px;
             font-weight: bold;
             color: white;
-            background: #1877F2;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
+            text-align: center;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .add-friend {
+            background: #1877F2;
             box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
-            transition: 0.3s;
         }
 
         .add-friend:hover {
@@ -72,21 +104,9 @@
             box-shadow: 0 0 20px rgba(0, 0, 255, 0.8);
         }
 
-        /* YouTube Subscribe Button */
         .subscribe {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
             background: #FF0000;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
             box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-            transition: 0.3s;
         }
 
         .subscribe:hover {
@@ -99,6 +119,9 @@
     <h1>Vikas Rajput</h1>
     <p>Welcome to my API</p>
 
+    <!-- Subscribe Text Box -->
+    <div class="subscribe-box">Subscribe to my channel</div>
+
     <!-- Video Embed Section -->
     <div class="video-container">
         <iframe 
@@ -109,10 +132,10 @@
         </iframe>
     </div>
 
-    <!-- Add Friend Button -->
-    <a href="https://www.facebook.com/share/1Ejp2ECVGC/" class="add-friend" target="_blank">+ Add Friend</a>
-
-    <!-- YouTube Subscribe Button -->
-    <a href="https://www.youtube.com/@uniquecreatorRajput?sub_confirmation=1" class="subscribe" target="_blank">📺 Subscribe</a>
+    <!-- Buttons Section -->
+    <div class="buttons">
+        <a href="https://www.facebook.com/share/1Ejp2ECVGC/" class="add-friend" target="_blank">+ Add Friend</a>
+        <a href="https://www.youtube.com/@uniquecreatorRajput?sub_confirmation=1" class="subscribe" target="_blank">📺 Subscribe</a>
+    </div>
 </body>
 </html>
