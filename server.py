@@ -5,7 +5,6 @@ import time
 import uuid
 import subprocess
 import json
-import threading
 
 app = Flask(__name__)
 CORS(app)
@@ -16,6 +15,10 @@ COOKIES_TXT = "cookies.txt"    # Netscape format cookies file
 
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
+
+@app.route('/')
+def home():
+    return render_template("index.html")
 
 def convert_cookies():
     """ Convert JSON Cookies to Netscape format """
@@ -36,17 +39,10 @@ def convert_cookies():
 
 def delete_old_files():
     """ Delete old files (older than 5 minutes) """
-    while True:
-        time.sleep(300)  # Runs every 5 minutes
-        for file in os.listdir(DOWNLOAD_FOLDER):
-            file_path = os.path.join(DOWNLOAD_FOLDER, file)
-            if os.path.isfile(file_path) and time.time() - os.path.getctime(file_path) > 300:
-                os.remove(file_path)
-                print(f"🗑 Deleted old file: {file_path}")
-
-@app.route('/')
-def home():
-    return render_template("index.html")
+    for file in os.listdir(DOWNLOAD_FOLDER):
+        file_path = os.path.join(DOWNLOAD_FOLDER, file)
+        if os.path.isfile(file_path) and time.time() - os.path.getctime(file_path) > 300:
+            os.remove(file_path)
 
 @app.route('/download', methods=['GET'])
 def download():
@@ -61,18 +57,29 @@ def download():
     unique_filename = f"{uuid.uuid4()}.mp3" if type_ == "audio" else f"{uuid.uuid4()}.mp4"
     output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
 
-    command = [
-        "yt-dlp",
-        "-f", "bestaudio/best" if type_ == "audio" else "bestvideo+bestaudio/best",
-        "--extract-audio" if type_ == "audio" else "--merge-output-format", "mp4",
-        "--audio-format", "mp3" if type_ == "audio" else "",
-        "--output", output_path,
-        "--cookies", COOKIES_TXT,
-        url
-    ]
+    if type_ == "audio":
+        command = [
+            "yt-dlp",
+            "-f", "bestaudio/best",
+            "--extract-audio",
+            "--audio-format", "mp3",
+            "--output", output_path,
+            "--cookies", COOKIES_TXT,
+            url
+        ]
+    else:  # Video case
+        command = [
+            "yt-dlp",
+            "-f", "bestvideo*+bestaudio/best",
+            "--merge-output-format", "mp4",
+            "--output", output_path,
+            "--cookies", COOKIES_TXT,
+            url
+        ]
 
     try:
-        subprocess.run([arg for arg in command if arg], check=True)
+        subprocess.run(command, check=True)
+        delete_old_files()  # Delete old files AFTER download
         return jsonify({
             "file_url": f"https://vikasrajput-api.onrender.com/static/{unique_filename}",
             "message": "Download successful"
@@ -90,6 +97,5 @@ def add_header(response):
     return response
 
 if __name__ == '__main__':
-    threading.Thread(target=delete_old_files, daemon=True).start()  # Start auto-delete thread
     app.run(debug=True, host='0.0.0.0', port=5000)
-        
+                                                                                                                                                                               
