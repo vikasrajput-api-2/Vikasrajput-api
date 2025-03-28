@@ -10,7 +10,8 @@ app = Flask(__name__)
 CORS(app)
 
 DOWNLOAD_FOLDER = "static"
-COOKIES_FILE = "cookies.json"  # ✅ JSON format cookies file
+COOKIES_JSON = "cookies.json"  # ✅ JSON cookies file
+COOKIES_TXT = "cookies.txt"    # ✅ Netscape format cookies file
 
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
@@ -19,8 +20,25 @@ if not os.path.exists(DOWNLOAD_FOLDER):
 def home():
     return render_template("index.html")
 
+def convert_cookies():
+    """ ✅ JSON Cookies ko Netscape format me convert karega """
+    try:
+        with open(COOKIES_JSON, "r", encoding="utf-8") as file:
+            cookies = json.load(file)
+
+        netscape_cookies = ""
+        for cookie in cookies:
+            netscape_cookies += f"{cookie['domain']}   TRUE   {cookie['path']}   {'TRUE' if cookie['secure'] else 'FALSE'}   {cookie.get('expiry', '0')}   {cookie['name']}   {cookie['value']}\n"
+
+        with open(COOKIES_TXT, "w", encoding="utf-8") as file:
+            file.write(netscape_cookies)
+
+        print("✅ Cookies converted to Netscape format (cookies.txt)")
+    except Exception as e:
+        print(f"❌ Error converting cookies: {str(e)}")
+
 def delete_old_files():
-    """ Purane files delete karega (20 sec se purane) """
+    """ ✅ Purane files delete karega (20 sec se purane) """
     for file in os.listdir(DOWNLOAD_FOLDER):
         file_path = os.path.join(DOWNLOAD_FOLDER, file)
         if os.path.isfile(file_path) and time.time() - os.path.getctime(file_path) > 20:
@@ -29,26 +47,29 @@ def delete_old_files():
 @app.route('/download', methods=['GET'])
 def download():
     url = request.args.get("url")
-    type_ = request.args.get("type", "audio")  # default = audio
+    type_ = request.args.get("type", "audio")  # ✅ Default: audio
 
     if not url:
         return jsonify({"error": "No URL provided"}), 400
 
     delete_old_files()
+    convert_cookies()  # ✅ Cookies convert kar raha hai
 
-    # ✅ yt-dlp command setup with correct cookies and output path
+    unique_filename = f"{uuid.uuid4()}.mp3" if type_ == "audio" else f"{uuid.uuid4()}.mp4"
+    output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
+
+    # ✅ yt-dlp command with cookies.txt
     command = [
-    "yt-dlp",
-    "-f", "bestaudio/best" if type_ == "audio" else "best[ext=mp4]",
-    "--extract-audio" if type_ == "audio" else "",
-    "--audio-format", "mp3" if type_ == "audio" else "",
-    "--output", output_path,
-    "--cookies", "cookies.txt",  # ✅ JSON ki jagah ab Netscape format use ho raha hai
-    url
-]
+        "yt-dlp",
+        "-f", "bestaudio/best" if type_ == "audio" else "best[ext=mp4]",
+        "--extract-audio" if type_ == "audio" else "",
+        "--audio-format", "mp3" if type_ == "audio" else "",
+        "--output", output_path,
+        "--cookies", COOKIES_TXT,  # ✅ JSON ki jagah ab Netscape format use ho raha hai
+        url
+    ]
 
-    
-    command = [arg for arg in command if arg]  # ✅ Remove empty strings
+    command = [arg for arg in command if arg]  # ✅ Empty strings remove karega
 
     try:
         subprocess.run(command, check=True)
