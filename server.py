@@ -10,8 +10,8 @@ app = Flask(__name__)
 CORS(app)
 
 DOWNLOAD_FOLDER = "static"
-COOKIES_JSON = "cookies.json"  # ✅ JSON cookies file
-COOKIES_TXT = "cookies.txt"    # ✅ Netscape format cookies file
+COOKIES_JSON = "cookies.json"  # JSON cookies file
+COOKIES_TXT = "cookies.txt"    # Netscape format cookies file
 
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
@@ -21,7 +21,7 @@ def home():
     return render_template("index.html")
 
 def convert_cookies():
-    """ ✅ JSON Cookies ko Netscape format me convert karega """
+    """ Convert JSON Cookies to Netscape format """
     try:
         with open(COOKIES_JSON, "r", encoding="utf-8") as file:
             cookies = json.load(file)
@@ -38,54 +38,40 @@ def convert_cookies():
         print(f"❌ Error converting cookies: {str(e)}")
 
 def delete_old_files():
-    """ ✅ Purane files delete karega (20 sec se purane) """
+    """ Delete old files (older than 5 minutes) """
     for file in os.listdir(DOWNLOAD_FOLDER):
         file_path = os.path.join(DOWNLOAD_FOLDER, file)
-        if os.path.isfile(file_path) and time.time() - os.path.getctime(file_path) > 20:
+        if os.path.isfile(file_path) and time.time() - os.path.getctime(file_path) > 300:
             os.remove(file_path)
 
 @app.route('/download', methods=['GET'])
 def download():
     url = request.args.get("url")
-    type_ = request.args.get("type", "audio")  # ✅ Default: audio
+    type_ = request.args.get("type", "audio")  # Default: audio
 
     if not url:
         return jsonify({"error": "No URL provided"}), 400
 
-    delete_old_files()
-    convert_cookies()  # ✅ Cookies convert kar raha hai
+    convert_cookies()  # Convert cookies first
 
-    unique_filename = uuid.uuid4().hex  # Unique filename generate
-    output_format = "mp3" if type_ == "audio" else "mp4"
-    output_path = os.path.join(DOWNLOAD_FOLDER, f"{unique_filename}.{output_format}")
+    unique_filename = f"{uuid.uuid4()}.mp3" if type_ == "audio" else f"{uuid.uuid4()}.mp4"
+    output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
 
-    # ✅ yt-dlp command fix with --no-playlist
-    if type_ == "audio":
-        command = [
-            "yt-dlp",
-            "-f", "bestaudio/best",
-            "--extract-audio",
-            "--audio-format", "mp3",
-            "--no-playlist",
-            "-o", f"{DOWNLOAD_FOLDER}/{unique_filename}.%(ext)s",
-            "--cookies", COOKIES_TXT,
-            url
-        ]
-    else:
-        command = [
-            "yt-dlp",
-            "-f", "bestvideo+bestaudio/best",
-            "--merge-output-format", "mp4",
-            "--no-playlist",
-            "-o", f"{DOWNLOAD_FOLDER}/{unique_filename}.%(ext)s",
-            "--cookies", COOKIES_TXT,
-            url
-        ]
+    command = [
+        "yt-dlp",
+        "-f", "bestaudio/best" if type_ == "audio" else "bestvideo+bestaudio/best",
+        "--extract-audio" if type_ == "audio" else "--merge-output-format", "mp4",
+        "--audio-format", "mp3" if type_ == "audio" else "",
+        "--output", output_path,
+        "--cookies", COOKIES_TXT,
+        url
+    ]
 
     try:
-        subprocess.run(command, check=True)
+        subprocess.run([arg for arg in command if arg], check=True)
+        delete_old_files()  # Delete old files AFTER download
         return jsonify({
-            "file_url": f"https://vikasrajput-api.onrender.com/static/{unique_filename}.{output_format}",
+            "file_url": f"https://vikasrajput-api.onrender.com/static/{unique_filename}",
             "message": "Download successful"
         })
     except subprocess.CalledProcessError as e:
@@ -98,8 +84,8 @@ def serve_static(filename):
 @app.after_request
 def add_header(response):
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    return response  # ✅ Fix indentation
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-            
+                
