@@ -1,0 +1,57 @@
+[
+  {
+    "name": "SID",
+    "value": "g.a000vAgTS4GGl8JVlYjEa8oi5zmwH3hG2qmI6o3JmU5078zZt07JlSpvKlLnVd2hmNAYQvBfxAACgYKAfgSARcSFQHGX2MiYyP7Ip7yMAnw_LoOJ9XQxhoVAUF8yKqJRrqbcgXbntSxPAc3AIWU0076",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "HSID",
+    "value": "A9LtlTAcAMbfiYsf2",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "SSID",
+    "value": "AtcTvkp1FeazFsAGQ",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "APISID",
+    "value": "dTWh66hm1PFnyxF1/AaGzcSoO9RUuVd1K4",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "SAPISID",
+    "value": "PvzDbVnPmvFY8-jU/Aq1euE4pYBC6YEExA",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "__Secure-1PAPISID",
+    "value": "PvzDbVnPmvFY8-jU/Aq1euE4pYBC6YEExA",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "__Secure-3PAPISID",
+    "value": "PvzDbVnPmvFY8-jU/Aq1euE4pYBC6YEExA",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "__Secure-1PSID",
+    "value": "g.a000vAgTS4GGl8JVlYjEa8oi5zmwH3hG2qmI6o3JmU5078zZt07JyPw7VXGjAEsmqr6o0EIm2AACgYKAb0SARcSFQHGX2MiVuev7UJhDikZecriBEUjAhoVAUF8yKrJ10oBq1x-L0d4DH2n8fG60076",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "__Secure-3PSID",
+    "value": "g.a000vAgTS4GGl8JVlYjEa8oi5zmwH3hG2qmI6o3JmU5078zZt07JI-HZK2Fmt2DVl0qmtSHZ9QACgYKAakSARcSFQHGX2Mic8VApSw1h02oxpl3uCWxvRoVAUF8yKpCchJSGiYtCr0FnWNevDnj0076",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "LOGIN_INFO",
+    "value": "AFmmF2swRQIhAO_TqbDYli5SymqONAi3yhz3vy0gkce2OXCb-K-m4xkKAiA23vdNtiamclh1BbiZWaE3eRaUBWJc918lFEKeCOi3Ig:QUQ3MjNmeEhQSGl2cUQxNlEyQ0J5LUlHMzZBS3NZV1pHazlTNW9ZQ2owOXQ0Vk5yTkxZZjVia3JiNE13bGV6M3NuN1NTLUN6X1R2MmdNVThMT0kzZ2l6UGpfVkdfeXZmSklUampQZEVVWklpMnJsWWdCRlllT2Iwb2lpTzB6R0pWWC1iV2NmX0VSUW9UQ2xqYlZOUU9OWFlZQVpxR0dtdWp3",
+    "domain": ".youtube.com"
+  },
+  {
+    "name": "PREF",
+    "value": "f6=40000000&tz=Asia.Calcutta&f7=100",
+    "domain": ".youtube.com"
+  }
+]
