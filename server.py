@@ -60,13 +60,14 @@ def download():
 
     # ✅ yt-dlp command with cookies.txt
     command = [
-    "yt-dlp",
-    "-f", "bestvideo+bestaudio/best",
-    "--merge-output-format", "mp4",
-    "--output", output_path,
-    "--cookies", "cookies.txt",
-    url
-]
+        "yt-dlp",
+        "-f", "bestaudio/best" if type_ == "audio" else "best[ext=mp4]",
+        "--extract-audio" if type_ == "audio" else "",
+        "--audio-format", "mp3" if type_ == "audio" else "",
+        "--output", output_path,
+        "--cookies", COOKIES_TXT,  # ✅ JSON ki jagah ab Netscape format use ho raha hai
+        url
+    ]
 
     command = [arg for arg in command if arg]  # ✅ Empty strings remove karega
 
