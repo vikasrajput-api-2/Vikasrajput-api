@@ -54,28 +54,32 @@ def download():
 
     convert_cookies()  # Convert cookies first
 
-    unique_filename = f"{uuid.uuid4()}.mp3" if type_ == "audio" else f"{uuid.uuid4()}.mp4"
+    # Generate unique filename
+    file_ext = "mp3" if type_ == "audio" else "mp4"
+    unique_filename = f"{uuid.uuid4()}.{file_ext}"
     output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
 
     if type_ == "audio":
         command = [
             "yt-dlp",
-            "-f", "bestaudio/best",
+            "-f", "bestaudio",
             "--extract-audio",
             "--audio-format", "mp3",
             "--output", output_path,
             "--cookies", COOKIES_TXT,
             url
         ]
-    else:  # Video case
+    elif type_ == "video":
         command = [
             "yt-dlp",
-            "-f", "bestvideo*+bestaudio/best",
+            "-f", "bestvideo*+bestaudio",
             "--merge-output-format", "mp4",
             "--output", output_path,
             "--cookies", COOKIES_TXT,
             url
         ]
+    else:
+        return jsonify({"error": "Invalid type. Use 'audio' or 'video'."}), 400
 
     try:
         subprocess.run(command, check=True)
@@ -98,4 +102,3 @@ def add_header(response):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-                                                                                                                                                                               
