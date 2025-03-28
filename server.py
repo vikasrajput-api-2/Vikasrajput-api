@@ -48,7 +48,7 @@ def download():
         "--extract-audio" if type_ == "audio" else "",
         "--audio-format", "mp3" if type_ == "audio" else "",
         "--output", output_path,
-        "--cookies-from-browser", "kiwi",  # ✅ JSON format cookies ka use
+        "--cookies-from-browser", "chrome",  # ✅ JSON format cookies ka use
         url
     ]
     
