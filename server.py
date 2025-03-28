@@ -58,18 +58,26 @@ def download():
     unique_filename = f"{uuid.uuid4()}.mp3" if type_ == "audio" else f"{uuid.uuid4()}.mp4"
     output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
 
-    # ✅ yt-dlp command with cookies.txt
-    command = [
-        "yt-dlp",
-        "-f", "bestaudio/best" if type_ == "audio" else "best[ext=mp4]",
-        "--extract-audio" if type_ == "audio" else "",
-        "--audio-format", "mp3" if type_ == "audio" else "",
-        "--output", output_path,
-        "--cookies", COOKIES_TXT,  # ✅ JSON ki jagah ab Netscape format use ho raha hai
-        url
-    ]
-
-    command = [arg for arg in command if arg]  # ✅ Empty strings remove karega
+    # ✅ yt-dlp command fix
+    if type_ == "audio":
+        command = [
+            "yt-dlp",
+            "-f", "bestaudio/best",
+            "--extract-audio",
+            "--audio-format", "mp3",
+            "--output", output_path,
+            "--cookies", COOKIES_TXT,
+            url
+        ]
+    else:
+        command = [
+            "yt-dlp",
+            "-f", "bestvideo+bestaudio/best",
+            "--merge-output-format", "mp4",
+            "--output", output_path,
+            "--cookies", COOKIES_TXT,
+            url
+        ]
 
     try:
         subprocess.run(command, check=True)
@@ -87,7 +95,8 @@ def serve_static(filename):
 @app.after_request
 def add_header(response):
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    return response
+    return response  # ✅ Fix indentation
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+            
