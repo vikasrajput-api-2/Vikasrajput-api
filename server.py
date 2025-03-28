@@ -43,7 +43,7 @@ def download():
         "--extract-audio" if type_ == "audio" else "",
         "--audio-format", "mp3" if type_ == "audio" else "",
         "--output", f"{DOWNLOAD_FOLDER}/%(title)s.%(ext)s",  # ✅ Fixed output path
-        "--cookies", COOKIES_FILE,  # ✅ Fixed cookies usage
+        "--cookies", "cookies.txt",  # ✅ Fixed cookies usage
         url
     ]
     
