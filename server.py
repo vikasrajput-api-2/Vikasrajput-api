@@ -15,7 +15,6 @@ COOKIES_FILE = "cookies.json"  # ✅ JSON format cookies file
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
-# ✅ Home Page Route
 @app.route('/')
 def home():
     return render_template("index.html")
@@ -37,23 +36,18 @@ def download():
 
     delete_old_files()
 
-    # ✅ Generate unique filename
-    unique_filename = f"{uuid.uuid4().hex}.{ 'mp4' if type_ == 'video' else 'mp3' }"
-    output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
-
-    # ✅ yt-dlp command setup with JSON cookies
+    # ✅ yt-dlp command setup with correct cookies and output path
     command = [
         "yt-dlp",
         "-f", "bestaudio/best" if type_ == "audio" else "best[ext=mp4]",
         "--extract-audio" if type_ == "audio" else "",
         "--audio-format", "mp3" if type_ == "audio" else "",
-        "--output", output_path,
-        "--cookies-from-browser", "chrome",  # ✅ JSON format cookies ka use
+        "--output", f"{DOWNLOAD_FOLDER}/%(title)s.%(ext)s",  # ✅ Fixed output path
+        "--cookies", COOKIES_FILE,  # ✅ Fixed cookies usage
         url
     ]
     
-    # ✅ Remove empty strings from command
-    command = [arg for arg in command if arg]
+    command = [arg for arg in command if arg]  # ✅ Remove empty strings
 
     try:
         subprocess.run(command, check=True)
