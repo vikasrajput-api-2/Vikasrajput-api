@@ -38,14 +38,15 @@ def download():
 
     # ✅ yt-dlp command setup with correct cookies and output path
     command = [
-        "yt-dlp",
-        "-f", "bestaudio/best" if type_ == "audio" else "best[ext=mp4]",
-        "--extract-audio" if type_ == "audio" else "",
-        "--audio-format", "mp3" if type_ == "audio" else "",
-        "--output", f"{DOWNLOAD_FOLDER}/%(title)s.%(ext)s",  # ✅ Fixed output path
-        "--cookies", "cookies.txt",  # ✅ Fixed cookies usage
-        url
-    ]
+    "yt-dlp",
+    "-f", "bestaudio/best" if type_ == "audio" else "best[ext=mp4]",
+    "--extract-audio" if type_ == "audio" else "",
+    "--audio-format", "mp3" if type_ == "audio" else "",
+    "--output", output_path,
+    "--cookies", "cookies.txt",  # ✅ JSON ki jagah ab Netscape format use ho raha hai
+    url
+]
+
     
     command = [arg for arg in command if arg]  # ✅ Remove empty strings
 
