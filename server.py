@@ -58,23 +58,24 @@ def download():
     file_ext = "mp3" if type_ == "audio" else "mp4"
     unique_filename = f"{uuid.uuid4()}.{file_ext}"
     output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
-
+    
+    # Fix yt-dlp command
     if type_ == "audio":
         command = [
             "yt-dlp",
             "-f", "bestaudio",
             "--extract-audio",
             "--audio-format", "mp3",
-            "--output", output_path,
+            "--output", os.path.join(DOWNLOAD_FOLDER, "%(title)s.%(ext)s"),
             "--cookies", COOKIES_TXT,
             url
         ]
     elif type_ == "video":
         command = [
             "yt-dlp",
-            "-f", "bestvideo*+bestaudio",
+            "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
             "--merge-output-format", "mp4",
-            "--output", output_path,
+            "--output", os.path.join(DOWNLOAD_FOLDER, "%(title)s.%(ext)s"),
             "--cookies", COOKIES_TXT,
             url
         ]
@@ -84,8 +85,19 @@ def download():
     try:
         subprocess.run(command, check=True)
         delete_old_files()  # Delete old files AFTER download
+        
+        # Find downloaded file
+        downloaded_file = None
+        for file in os.listdir(DOWNLOAD_FOLDER):
+            if file.endswith(file_ext):
+                downloaded_file = file
+                break
+
+        if not downloaded_file:
+            return jsonify({"error": "Download failed: File not found"}), 500
+
         return jsonify({
-            "file_url": f"https://vikasrajput-api.onrender.com/static/{unique_filename}",
+            "file_url": f"https://vikasrajput-api.onrender.com/static/{downloaded_file}",
             "message": "Download successful"
         })
     except subprocess.CalledProcessError as e:
@@ -102,3 +114,4 @@ def add_header(response):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+                                                                                  
