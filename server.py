@@ -4,114 +4,91 @@ import os
 import time
 import uuid
 import subprocess
-import json
+import threading
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 CORS(app)
 
 DOWNLOAD_FOLDER = "static"
-COOKIES_JSON = "cookies.json"  # JSON cookies file
-COOKIES_TXT = "cookies.txt"    # Netscape format cookies file
+COOKIES_FILE = "cookies.txt"  # Make sure you have cookies.txt
 
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
-@app.route('/')
-def home():
-    return render_template("index.html")
-
-def convert_cookies():
-    """ Convert JSON Cookies to Netscape format """
-    try:
-        with open(COOKIES_JSON, "r", encoding="utf-8") as file:
-            cookies = json.load(file)
-
-        netscape_cookies = ""
-        for cookie in cookies:
-            netscape_cookies += f"{cookie['domain']}   TRUE   {cookie['path']}   {'TRUE' if cookie['secure'] else 'FALSE'}   {cookie.get('expiry', '0')}   {cookie['name']}   {cookie['value']}\n"
-
-        with open(COOKIES_TXT, "w", encoding="utf-8") as file:
-            file.write(netscape_cookies)
-
-        print("✅ Cookies converted to Netscape format (cookies.txt)")
-    except Exception as e:
-        print(f"❌ Error converting cookies: {str(e)}")
-
+# Function to delete old files (older than 10 sec)
 def delete_old_files():
-    """ Delete old files (older than 5 minutes) """
     for file in os.listdir(DOWNLOAD_FOLDER):
         file_path = os.path.join(DOWNLOAD_FOLDER, file)
-        if os.path.isfile(file_path) and time.time() - os.path.getctime(file_path) > 300:
+        if os.path.isfile(file_path) and time.time() - os.path.getctime(file_path) > 10:
             os.remove(file_path)
 
-@app.route('/download', methods=['GET'])
-def download():
-    url = request.args.get("url")
-    type_ = request.args.get("type", "audio")  # Default: audio
+@app.route('/')
+def home():
+    return render_template("index.html")  # Show HTML page on homepage
 
-    if not url:
+@app.route('/download', methods=['GET'])
+def download_media():
+    video_url = request.args.get("url")
+    media_type = request.args.get("type", "audio")  # Default: Audio
+
+    if not video_url:
         return jsonify({"error": "No URL provided"}), 400
 
-    convert_cookies()  # Convert cookies first
+    delete_old_files()  # Clean old files
 
-    # Generate unique filename
-    file_ext = "mp3" if type_ == "audio" else "mp4"
-    unique_filename = f"{uuid.uuid4()}.{file_ext}"
+    unique_filename = f"{uuid.uuid4().hex}.{'mp3' if media_type == 'audio' else 'mp4'}"
     output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
-    
-    # Fix yt-dlp command
-    if type_ == "audio":
-        command = [
-            "yt-dlp",
-            "-f", "bestaudio",
-            "--extract-audio",
-            "--audio-format", "mp3",
-            "--output", os.path.join(DOWNLOAD_FOLDER, "%(title)s.%(ext)s"),
-            "--cookies", COOKIES_TXT,
-            url
-        ]
-    elif type_ == "video":
-        command = [
-            "yt-dlp",
-            "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
-            "--merge-output-format", "mp4",
-            "--output", os.path.join(DOWNLOAD_FOLDER, "%(title)s.%(ext)s"),
-            "--cookies", COOKIES_TXT,
-            url
-        ]
+
+    # YouTube download command
+    command = [
+        "yt-dlp",
+        "--output", output_path,
+        "--cookies", COOKIES_FILE,
+        video_url
+    ]
+
+    if media_type == "audio":
+        command.extend(["--extract-audio", "--audio-format", "mp3"])
     else:
-        return jsonify({"error": "Invalid type. Use 'audio' or 'video'."}), 400
+        command.extend(["-f", "best"])  # Best video quality available
 
     try:
         subprocess.run(command, check=True)
-        delete_old_files()  # Delete old files AFTER download
-        
-        # Find downloaded file
-        downloaded_file = None
-        for file in os.listdir(DOWNLOAD_FOLDER):
-            if file.endswith(file_ext):
-                downloaded_file = file
-                break
-
-        if not downloaded_file:
-            return jsonify({"error": "Download failed: File not found"}), 500
-
-        return jsonify({
-            "file_url": f"https://vikasrajput-api.onrender.com/static/{downloaded_file}",
-            "message": "Download successful"
-        })
+        return jsonify({"file_url": f"https://vikasrajput-api.onrender.com/static/{unique_filename}", "message": "Download successful"})
     except subprocess.CalledProcessError as e:
-        return jsonify({"error": f"Download failed: {str(e)}"}), 500
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/static/<path:filename>')
+# **Static file serving**
+@app.route('/static/<filename>')
 def serve_static(filename):
     return send_from_directory(DOWNLOAD_FOLDER, filename)
+
+# **Keep Alive Route**
+@app.route('/keepalive', methods=['GET'])
+def keep_alive():
+    return "Server is alive!", 200
+
+# **YouTube Channel API**
+@app.route('/channel', methods=['GET'])
+def get_channel():
+    return jsonify({"channel_link": "https://m.youtube.com/mirrykal"})
 
 @app.after_request
 def add_header(response):
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     return response
 
+# **Keep Alive Thread**
+def run_keep_alive():
+    while True:
+        time.sleep(600)  # Ping every 10 minutes
+        try:
+            subprocess.run(["curl", "https://mirrykal.onrender.com/keepalive"], check=True)
+        except:
+            pass
+
+# Start Keep Alive in a separate thread
+threading.Thread(target=run_keep_alive, daemon=True).start()
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-                                                                                  
