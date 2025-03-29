@@ -4,18 +4,36 @@ import os
 import time
 import uuid
 import subprocess
-import threading
+import json
 
 app = Flask(__name__, template_folder="templates")
 CORS(app)
 
 DOWNLOAD_FOLDER = "static"
-COOKIES_FILE = "cookies.txt"  # Make sure you have cookies.txt
+COOKIES_JSON = "cookies.json"  # JSON cookies file
+COOKIES_TXT = "cookies.txt"    # Netscape format cookies file
 
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
-# Function to delete old files (older than 10 sec)
+# ✅ Function to convert JSON cookies to Netscape format
+def convert_cookies():
+    try:
+        with open(COOKIES_JSON, "r", encoding="utf-8") as file:
+            cookies = json.load(file)
+
+        netscape_cookies = ""
+        for cookie in cookies:
+            netscape_cookies += f"{cookie['domain']}   TRUE   {cookie['path']}   {'TRUE' if cookie['secure'] else 'FALSE'}   {cookie.get('expiry', '0')}   {cookie['name']}   {cookie['value']}\n"
+
+        with open(COOKIES_TXT, "w", encoding="utf-8") as file:
+            file.write(netscape_cookies)
+
+        print("✅ Cookies converted to Netscape format (cookies.txt)")
+    except Exception as e:
+        print(f"❌ Error converting cookies: {str(e)}")
+
+# ✅ Function to delete old files (older than 10 sec)
 def delete_old_files():
     for file in os.listdir(DOWNLOAD_FOLDER):
         file_path = os.path.join(DOWNLOAD_FOLDER, file)
@@ -35,15 +53,16 @@ def download_media():
         return jsonify({"error": "No URL provided"}), 400
 
     delete_old_files()  # Clean old files
+    convert_cookies()   # ✅ Convert cookies before downloading
 
     unique_filename = f"{uuid.uuid4().hex}.{'mp3' if media_type == 'audio' else 'mp4'}"
     output_path = os.path.join(DOWNLOAD_FOLDER, unique_filename)
 
-    # YouTube download command
+    # ✅ YouTube download command with cookies
     command = [
         "yt-dlp",
         "--output", output_path,
-        "--cookies", COOKIES_FILE,
+        "--cookies", COOKIES_TXT,  # ✅ Using Netscape format cookies
         video_url
     ]
 
@@ -58,17 +77,17 @@ def download_media():
     except subprocess.CalledProcessError as e:
         return jsonify({"error": str(e)}), 500
 
-# **Static file serving**
+# ✅ Static file serving
 @app.route('/static/<filename>')
 def serve_static(filename):
     return send_from_directory(DOWNLOAD_FOLDER, filename)
 
-# **Keep Alive Route**
+# ✅ Keep Alive Route
 @app.route('/keepalive', methods=['GET'])
 def keep_alive():
     return "Server is alive!", 200
 
-# **YouTube Channel API**
+# ✅ YouTube Channel API
 @app.route('/channel', methods=['GET'])
 def get_channel():
     return jsonify({"channel_link": "https://m.youtube.com/mirrykal"})
@@ -77,18 +96,6 @@ def get_channel():
 def add_header(response):
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     return response
-
-# **Keep Alive Thread**
-def run_keep_alive():
-    while True:
-        time.sleep(600)  # Ping every 10 minutes
-        try:
-            subprocess.run(["curl", "https://mirrykal.onrender.com/keepalive"], check=True)
-        except:
-            pass
-
-# Start Keep Alive in a separate thread
-threading.Thread(target=run_keep_alive, daemon=True).start()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
